@@ -1,0 +1,31 @@
+CC = gcc
+CFLAGS = -g -std=c99 -Wall
+
+.PHONY: all clean
+
+all: memgrind test_coalesce test_errors test_basic memtest
+
+memgrind: memgrind.o mymalloc.o
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_coalesce: test_coalesce.o mymalloc.o
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_errors: test_errors.o mymalloc.o
+	$(CC) $(CFLAGS) $^ -o $@
+
+memtest: memtest.o mymalloc.o
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_basic: test_basic.o mymalloc.o
+	$(CC) $(CFLAGS) $^ -o $@
+
+memgrind.o: memgrind.c mymalloc.h
+mymalloc.o: mymalloc.c mymalloc.h
+test_coalesce.o: test_coalesce.c mymalloc.h
+test_errors.o: test_errors.c mymalloc.h
+test_basic.o: test_basic.c mymalloc.h
+memtest.o: memtest.c mymalloc.h
+
+clean:
+	rm -f memgrind test_coalesce test_errors test_basic memtest *.o
